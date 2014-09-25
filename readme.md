@@ -27,7 +27,7 @@ var fs = require('fs');
 gander(fs, {
   name: 'fs',
   async: true, 
-  ignore: ['writeFile', 'writeFileSync']
+  ignore: ['write', 'writeFile']
 });
 
 fs.readFile(__filename, function(err, data) {
