@@ -105,8 +105,8 @@ Gander takes an object and wraps all keys and prototype methods so that `before`
 * **async** `Boolean` - If set to `true`, gander will wrap callbacks where a callback is a function in the last argument position.
 * **ignore** `Array.<String>` - Gander will ignore any function/method with a name in the `ignore` array.
 * **before** `Function(name, method, arg1, arg2, ..., argn)` - Gander will call `before` immediately prior to calling the underlying function. After the `name` and `method` parameters is the complete set of parameters passed to the underlying function.
-* **after** `Function(name, method, arg1, arg2, ..., argn, returnValue)`:sync - Gander will call `after` immediately after calling the underlying function. The function parameters are the same as `before` but now include the return value from the underlying function as the last argument.
-* **after** `Function(name, method, arg1, arg2, ..., argn, callbackArg1, ..., callbackArgn)`:async - Gander will call `after` immediately prior to calling the underlying callback function. The function parameters to `after` are the same as `before` but now include the arguments to be passed to the underlying callback.
+* **after** `Function(name, method, arg1, arg2, ..., argn, returnValue)`:**sync** - Gander will call `after` immediately after calling the underlying function. The function parameters are the same as `before` but now include the return value from the underlying function as the last argument.
+* **after** `Function(name, method, arg1, arg2, ..., argn, callbackArg1, ..., callbackArgn)`:**async** - Gander will call `after` immediately prior to calling the underlying callback function. The function parameters to `after` are the same as `before` but now include the arguments to be passed to the underlying callback.
 
 Before/After Example
 --------------------
