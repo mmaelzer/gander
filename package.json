@@ -1,0 +1,37 @@
+{
+  "name": "gander",
+  "version": "1.0.0",
+  "description": "A function timing library and so much more",
+  "main": "gander.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mmaelzer/gander"
+  },
+  "keywords": [
+    "object",
+    "objects",
+    "debug",
+    "inspect",
+    "performance",
+    "optimize",
+    "log",
+    "logger",
+    "logging",
+    "log-a-rama"
+  ],
+  "author": "Mike Maelzer <mmaelzer@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mmaelzer/gander/issues"
+  },
+  "homepage": "https://github.com/mmaelzer/gander",
+  "devDependencies": {
+    "tape": "^3.0.0"
+  }
+}
