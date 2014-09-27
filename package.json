@@ -1,6 +1,6 @@
 {
   "name": "gander",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A function timing library and so much more",
   "main": "gander.js",
   "directories": {
