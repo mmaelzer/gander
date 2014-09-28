@@ -89,7 +89,7 @@ define(['views/myview'], function(MyView) {
 
   /*** click the view ***/
 
-  // MyView.logBoop: 0.287ms
+  // MyView1.logBoop: 0.287ms
 });
 ```
 
