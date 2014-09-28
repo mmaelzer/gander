@@ -9,7 +9,9 @@ Gander, in it's most basic form, wraps itself around functions, sync and (option
   
 Generally, though, gander exposes callbacks that are invoked before and after a function is called so that you can perform thorough investigations and/or mad science.  
   
-Gander supports CommonJS/node.js and AMD/require.js imports. You can also use it in your web app via a normal `script` tag and it will add itself to the `window` object.
+Gander supports CommonJS/node.js and AMD/require.js imports. You can also use it in your web app via a normal `script` tag and it will add itself to the `window` object.  
+  
+[![build status](https://secure.travis-ci.org/mmaelzer/gander.png)](http://travis-ci.org/mmaelzer/gander)
 
 Install
 -------
@@ -98,7 +100,7 @@ Usage
 
 ### gander(object, [options])
 
-Gander takes an object and wraps all keys and prototype methods so that `before` and `after` callbacks are available. By default, the `before` callback calls `console.time` with `name` and `method`. By default, the `after` callback calls `console.timeEnd` with `name` and `method`. These defaults make gander a nice way of doing timing tests.  
+Gander takes an object and wraps all keys and prototype methods so that `before` and `after` callbacks are available. By default, the `before` callback stores a start time. By default, the `after` callback retrieves the start time and logs the diff in time. These defaults make gander a nice way of doing timing tests.  
   
 #### Options
 

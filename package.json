@@ -1,17 +1,17 @@
 {
   "name": "gander",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A function timing library and so much more",
   "main": "gander.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
     "test": "node test.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/mmaelzer/gander"
+  },
+  "engines": {
+    "node": ">=0.8.0"
   },
   "keywords": [
     "object",
