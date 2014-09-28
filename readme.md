@@ -5,7 +5,7 @@ gander
 Gander at my hooks, ye Mighty, and despair!
 ```
 
-Gander, in its most basic form, wraps itself around functions, sync and (optionally) async, to provide execution times. Times are provided in sub-milliseconds when the precision is available ([process.hrtime](http://nodejs.org/api/process.html#process_process_hrtime), [performance.now](https://developer.mozilla.org/en-US/docs/Web/API/Performance.now)) and milliseconds when not.  
+Gander, in its most basic form, wraps itself around functions to provide execution times. Times are provided in sub-milliseconds when the precision is available ([process.hrtime](http://nodejs.org/api/process.html#process_process_hrtime), [performance.now](https://developer.mozilla.org/en-US/docs/Web/API/Performance.now)) and milliseconds when not.  
   
 Generally, though, gander exposes callbacks that are invoked before and after a function is called so that you can perform thorough investigations and/or mad science.  
   
