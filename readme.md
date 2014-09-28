@@ -5,7 +5,9 @@ gander
 Gander at my hooks, ye Mighty, and despair!
 ```
 
-Gander, in it's most basic form, wraps itself around functions, sync and (optionally) async, to provide execution times via `console.time` and `console.timeEnd`. Generally, though, gander exposes callbacks that are invoked before and after a function is called so that you can perform thorough investigations and/or mad science.  
+Gander, in it's most basic form, wraps itself around functions, sync and (optionally) async, to provide execution times. Times are provided in sub-millisecond when the precision is available ([process.hrtime](http://nodejs.org/api/process.html#process_process_hrtime), [performance.now](https://developer.mozilla.org/en-US/docs/Web/API/Performance.now)) and milliseconds when not.  
+  
+Generally, though, gander exposes callbacks that are invoked before and after a function is called so that you can perform thorough investigations and/or mad science.  
   
 Gander supports CommonJS/node.js and AMD/require.js imports. You can also use it in your web app via a normal `script` tag and it will add itself to the `window` object.
 
@@ -32,11 +34,11 @@ gander(fs, {
 
 fs.readFile(__filename, function(err, data) {
   /* log messages:
-   *  fs.open: 0ms
-   *  fs.fstat: 0ms
-   *  fs.read: 1ms
-   *  fs.close: 0ms
-   *  fs.readFile: 3ms
+   *  fs.open: 0.543ms
+   *  fs.fstat: 0.301ms
+   *  fs.read: 0.154ms
+   *  fs.close: 0.086ms
+   *  fs.readFile: 13.760ms
    */
 
   fs.writeFile(__filename + '.bak', data, function(err) {
@@ -44,8 +46,8 @@ fs.readFile(__filename, function(err, data) {
     // method calls are logged since they're not ignored
 
     /* log messages
-     *  fs.open: 0ms
-     *  fs.close: 0ms
+     *  fs.open: 0.364ms
+     *  fs.close: 0.555ms
      */
   });
 });
@@ -83,11 +85,11 @@ define(['views/myview'], function(MyView) {
 
   $('body').append(view.render().el);
 
-  // MyView1.render: 1ms
+  // MyView1.render: 0.109ms
 
   /*** click the view ***/
 
-  // MyView.logBoop: 2ms
+  // MyView.logBoop: 0.287ms
 });
 ```
 
