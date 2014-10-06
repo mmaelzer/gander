@@ -184,7 +184,7 @@
       var key = getKey(args[0], args[1]);
       var ms = getMs(_times[key]);
       delete _times[key];
-      logger(args[0], args[1], ms);
+      logger(args[0], args[1], +ms);
     };
   }
 

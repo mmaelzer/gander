@@ -2,7 +2,7 @@ var test = require('tape');
 var gander = require('./gander');
 
 test('gander', function(t) {
-  t.plan(11);
+  t.plan(14);
 
   var obj = new TestObject();
   gander(obj, { 
@@ -61,6 +61,16 @@ test('gander', function(t) {
   }});
 
   obj6.identity(-1);
+
+  var obj7 = { fooAsync: fooAsync };
+
+  gander(obj7, { async: true, name: 'log', logger: function(name, method, time) {
+    t.equal('log', name, 'the `logger` option passes the object name to the logger');
+    t.equal('fooAsync', method, 'the `logger` option passes the object method to the logger');
+    t.equal(typeof time, 'number', 'the `logger` option passes a time to the logger');
+  }});
+
+  obj7.fooAsync(noop);
 
 });
 
