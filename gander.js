@@ -12,6 +12,7 @@
    *    @param {Boolean=} async
    *    @param {Array.<String>} ignore
    *    @param {Boolean=} unique
+   *    @param {Function(String, String, Number)=} logger
    *
    *  @public
    */
@@ -31,11 +32,14 @@
     // Methods to ignore
     var ignore = (options.ignore || []).concat('constructor');
 
+    // Logger to use for the base case
+    var logger = options.logger || defaultLog;
+
     // If no before/after functions provided, default
     // to console.time/console.timeEnd
     if (!options.before && !options.after) {
       before = time;
-      after = timeEnd;
+      after = timeEnd(logger);
     }
 
     // Get the prototype of the object
@@ -126,6 +130,24 @@
   }
 
   /**
+   *  @param {String} name
+   *  @param {String} method
+   *  @param {Number} time
+   */
+  function defaultLog(name, method, time) {
+    console.log(name + '.' + method, ':', time);
+  }
+
+  /**
+   *  @param {String} name
+   *  @param {String} method
+   *  @return {String}
+   */
+  function getKey(name, method) {
+    return name + '.' + method;
+  }
+
+  /**
    *  Handle hrtime values or stanard numeric times
    *  @param {Number|Array<Number>} time
    *  @return {Number}
@@ -146,21 +168,24 @@
       args.push(arguments[i]);
     }
 
-    var key = args.join('.');
+    var key = getKey(args[0], args[1]);
     _times[key] = now();
   }
 
-  function timeEnd() {
-    var args = [];
-    // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
-    for (var i = 0; i < Math.min(arguments.length, 2); i++) {
-      args.push(arguments[i]);
-    }
+  /** @param {Function} logger **/
+  function timeEnd(logger) {
+    return function() {
+      var args = [];
+      // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
+      for (var i = 0; i < Math.min(arguments.length, 2); i++) {
+        args.push(arguments[i]);
+      }
 
-    var key = args.join('.');
-    var ms = getMs(_times[key]);
-    delete _times[key];
-    console.log(key + ':', ms + 'ms');
+      var key = getKey(args[0], args[1]);
+      var ms = getMs(_times[key]);
+      delete _times[key];
+      logger(args[0], args[1], ms);
+    };
   }
 
   /** 

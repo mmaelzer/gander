@@ -111,6 +111,7 @@ Gander takes an object and wraps all keys and prototype methods so that `before`
 * **before** `Function(name, method, arg1, arg2, ..., argn)` - Gander will call `before` immediately prior to calling the underlying function. After the `name` and `method` parameters is the complete set of parameters passed to the underlying function.
 * **after:sync** `Function(name, method, arg1, arg2, ..., argn, returnValue)` - Gander will call `after` immediately after calling the underlying function. The function parameters are the same as `before` but now include the return value from the underlying function as the last argument.
 * **after:async** `Function(name, method, arg1, arg2, ..., argn, callbackArg1, ..., callbackArgn)` - Gander will call `after` immediately prior to calling the underlying callback function. The function parameters to `after` are the same as `before` but now include the arguments to be passed to the underlying callback.
+* **logger** `Function(name, method, timeInMs)` - If you wish to hook into a custom logger, pass in a function that will be called with the `name` of the object, the `method` being called, and the `timeInMs` it took to execute the function.
 
 Before/After Example
 --------------------
@@ -152,6 +153,32 @@ console.log('obj.num:', obj.num);
 // before: this.num: -1 
 // after: this.num: 3
 // obj.num: 3
+```
+
+
+Logger Example
+---------------
+```javascript
+var winston = require('winston');
+var fs = require('fs');
+var gander = require('gander');
+
+gander(fs, {
+  async: true,
+  logger: function(name, method, timeInMs) {
+    winston.info(name + '.' + method, timeInMs);
+  }
+});
+
+fs.readFile(__filename, function(err, data) {
+  /* log messages:
+   * info: fs.open 0.491
+   * info: fs.fstat 0.782
+   * info: fs.read 0.147
+   * info: fs.close 0.132
+   * info: fs.readFile 16.468
+   */
+});
 ```
 
 The MIT License
