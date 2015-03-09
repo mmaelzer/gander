@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/mmaelzer/gander",
   "devDependencies": {
-    "tape": "^3.0.0"
+    "tape": "^3.0.0",
+    "bluebird": "~2.9.13"
   }
 }

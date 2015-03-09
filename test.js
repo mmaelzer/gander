@@ -1,8 +1,9 @@
 var test = require('tape');
 var gander = require('./gander');
+var Promise = require('bluebird');
 
 test('gander', function(t) {
-  t.plan(14);
+  t.plan(20);
 
   var obj = new TestObject();
   gander(obj, { 
@@ -72,6 +73,22 @@ test('gander', function(t) {
 
   obj7.fooAsync(noop);
 
+  var obj8 = { fooPromise: fooPromise };
+  gander(obj8, { name: 'object8', promise: true, after: function(name, method, retValue) {
+    t.equal(name, 'object8', 'after() should pass object name as first arg');
+    t.equal(method, 'fooPromise', 'after() should pass method name as second arg');
+    t.ok(retValue.then && retValue.catch, 'return value should be a Promise');
+  }});
+  obj8.fooPromise();
+
+  var obj9 = { fooPromiseFail: fooPromiseFail };
+  gander(obj9, { name: 'object9', promise: true, after: function(name, method, retValue) {
+    t.equal(name, 'object9', 'after() should pass object name as first arg');
+    t.equal(method, 'fooPromiseFail', 'after() should pass method name as second arg');
+    t.ok(retValue.then && retValue.catch, 'return value should be a Promise');
+    retValue.catch(function () { });
+  }});
+  obj9.fooPromiseFail();
 });
 
 // Helpers
@@ -87,6 +104,19 @@ function fooAsync(callback) {
     callback('foo');
   }, 500);
   return 'bar';
+}
+
+function fooPromise() {
+  return Promise.delay(500)
+    .then(function () {
+      return 'bar';
+    });
+}
+function fooPromiseFail() {
+  return Promise.delay(500)
+    .then(function () {
+      throw new Error('Expected failure');
+    });
 }
 
 // Test Object definition
