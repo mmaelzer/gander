@@ -29,6 +29,9 @@
     // Handle async calls
     var async = options.async || false;
 
+    // Handle promises
+    var promise = options.promise || false;
+
     // Methods to ignore
     var ignore = (options.ignore || []).concat('constructor');
 
@@ -80,8 +83,19 @@
           // Handle sync calls
           else {
             var ret = fn.apply(this, args);
-            after.apply(this, fullArgs.concat(ret));
-            return ret;
+
+            if (promise && ret.then && ret.catch) {
+              return ret.then(function (value) {
+                after.apply(this, fullArgs.concat(ret));
+                return value;
+              }).catch(function (error) {
+                after.apply(this, fullArgs.concat(ret));
+                throw error;
+              });
+            } else {
+              after.apply(this, fullArgs.concat(ret));
+              return ret;
+            }
           }
         };
       }
