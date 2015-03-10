@@ -6,11 +6,11 @@ Gander at my hooks, ye Mighty, and despair!
 ```
 
 Gander, in its most basic form, wraps itself around functions to provide execution times. Times are provided in sub-milliseconds when the precision is available ([process.hrtime](http://nodejs.org/api/process.html#process_process_hrtime), [performance.now](https://developer.mozilla.org/en-US/docs/Web/API/Performance.now)) and milliseconds when not.  
-  
+
 Generally, though, gander exposes callbacks that are invoked before and after a function is called so that you can perform thorough investigations and/or mad science.  
-  
+
 Gander supports CommonJS/node.js and AMD/require.js imports. You can also use it in your web app via a normal `script` tag and it will add itself to the `window` object.  
-  
+
 [![build status](https://secure.travis-ci.org/mmaelzer/gander.png)](http://travis-ci.org/mmaelzer/gander)
 
 Install
@@ -30,7 +30,7 @@ var fs = require('fs');
 
 gander(fs, {
   name: 'fs',
-  async: true, 
+  async: true,
   ignore: ['write', 'writeFile']
 });
 
@@ -101,12 +101,13 @@ Usage
 ### gander(object, [options])
 
 Gander takes an object and wraps all keys and prototype methods so that `before` and `after` callbacks are available. By default, the `before` callback stores a start time. By default, the `after` callback retrieves the start time and logs the diff in time. These defaults make gander a nice way of doing timing tests.  
-  
+
 #### Options
 
 * **name** `String` - The name of the object. This is for your convenience so you can keep track of what's going on.
 * **unique** `Boolean` - If set to `true`, gander will add an integer to the end of the `name` in the cases where the name is reused by multiple instantiated objects.
 * **async** `Boolean` - If set to `true`, gander will wrap callbacks where a callback is a function in the last argument position.
+* **promise** `Boolean` - If set to `true`, gander will also wrap promises returned from methods on an object.
 * **ignore** `Array.<String>` - Gander will ignore any function/method with a name in the `ignore` array.
 * **before** `Function(name, method, arg1, arg2, ..., argn)` - Gander will call `before` immediately prior to calling the underlying function. After the `name` and `method` parameters is the complete set of parameters passed to the underlying function.
 * **after:sync** `Function(name, method, arg1, arg2, ..., argn, returnValue)` - Gander will call `after` immediately after calling the underlying function. The function parameters are the same as `before` but now include the return value from the underlying function as the last argument.
@@ -150,7 +151,7 @@ gander(obj, {
 obj.increment(2);
 console.log('obj.num:', obj.num);
 
-// before: this.num: -1 
+// before: this.num: -1
 // after: this.num: 3
 // obj.num: 3
 ```
