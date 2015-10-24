@@ -1,10 +1,12 @@
-var test = require('tape');
-var gander = require('./gander');
+var gander = (function(coverage) {
+  return coverage
+    ? require('./gander-cov')
+    : require('./gander');
+})(process.env.USE_COVERAGE);
+
 var Promise = require('bluebird');
 
-test('gander', function(t) {
-  t.plan(20);
-
+module.exports.testBeforeAfter = function(t) {
   var obj = new TestObject();
   gander(obj, { 
     name: 'object1', 
@@ -21,7 +23,11 @@ test('gander', function(t) {
     }
   });
   obj.jump(5);
+  t.done();
+};
 
+
+module.exports.testIgnore = function(t) {
   var obj2 = new TestObject();
   obj2.val = 3;
   obj2.triple = function() {};
@@ -36,60 +42,99 @@ test('gander', function(t) {
   });
   obj2.triple();
   t.equal(obj2.val, 3, 'the `ignore` option should provide a list of methods to not wrap with gander');
+  t.done();
+};
 
+module.exports.testAsyncBasic = function(t) {
   var obj3 = { fooAsync: fooAsync };
 
-  gander(obj3, {name: 'object3', async: true, after: function(name, method, callback, foo) {
-    t.equal('foo', foo, 'the `async` option should call `after` after the async operation completes');
-  }});
+  gander(obj3, {
+    name: 'object3',
+    async: true,
+    after: function(name, method, callback, foo) {
+      t.equal('foo', foo, 'the `async` option should call `after` after the async operation completes');
+      t.done();
+    }
+  });
 
   obj3.fooAsync(noop);
+};
 
+module.exports.testAsyncWithData = function(t) {
   var obj4 = { fooAsync: fooAsync };
 
-  gander(obj4, {name: 'object4', after: function(name, method, callback, bar) {
-    t.equal('bar', bar, 'not setting `async` should call `after` with the return value of the async function');
-  }});
+  gander(obj4, {
+    name: 'object4',
+    after: function(name, method, callback, bar) {
+      t.equal('bar', bar, 'not setting `async` should call `after` with the return value of the async function');
+      t.done();
+    }
+  });
 
   obj4.fooAsync(noop);
+};
 
+module.exports.testUnique = function(t) {
   var obj5 = { identity: identity };
   var obj6 = { identity: identity };
 
   gander(obj5, { name: 'obj', unique: true});
   gander(obj6, { name: 'obj', unique: true, before: function(name) {
     t.equal(name, 'obj2', 'the `unique` option with a `name` should provide a uniquely numbered name');
+    t.done();
   }});
 
   obj6.identity(-1);
+};
 
+module.exports.testLogger = function(t) {
   var obj7 = { fooAsync: fooAsync };
 
-  gander(obj7, { async: true, name: 'log', logger: function(name, method, time) {
-    t.equal('log', name, 'the `logger` option passes the object name to the logger');
-    t.equal('fooAsync', method, 'the `logger` option passes the object method to the logger');
-    t.equal(typeof time, 'number', 'the `logger` option passes a time to the logger');
-  }});
+  gander(obj7, {
+    async: true,
+    name: 'log',
+    logger: function(name, method, time) {
+      t.equal('log', name, 'the `logger` option passes the object name to the logger');
+      t.equal('fooAsync', method, 'the `logger` option passes the object method to the logger');
+      t.equal(typeof time, 'number', 'the `logger` option passes a time to the logger');
+      t.done();
+    }
+  });
 
   obj7.fooAsync(noop);
+};
 
+module.exports.testPromise = function(t) {
   var obj8 = { fooPromise: fooPromise };
-  gander(obj8, { name: 'object8', promise: true, after: function(name, method, retValue) {
-    t.equal(name, 'object8', 'after() should pass object name as first arg');
-    t.equal(method, 'fooPromise', 'after() should pass method name as second arg');
-    t.ok(retValue.then && retValue.catch, 'return value should be a Promise');
-  }});
-  obj8.fooPromise();
 
+  gander(obj8, {
+    name: 'object8',
+    promise: true,
+    after: function(name, method, retValue) {
+      t.equal(name, 'object8', 'after() should pass object name as first arg');
+      t.equal(method, 'fooPromise', 'after() should pass method name as second arg');
+      t.ok(retValue.then && retValue.catch, 'return value should be a Promise');
+      t.done();
+    }
+  });
+
+  obj8.fooPromise();
+};
+
+module.exports.testPromiseFail = function(t) {
   var obj9 = { fooPromiseFail: fooPromiseFail };
-  gander(obj9, { name: 'object9', promise: true, after: function(name, method, retValue) {
-    t.equal(name, 'object9', 'after() should pass object name as first arg');
-    t.equal(method, 'fooPromiseFail', 'after() should pass method name as second arg');
-    t.ok(retValue.then && retValue.catch, 'return value should be a Promise');
-    retValue.catch(function () { });
+
+  gander(obj9, {
+    name: 'object9',
+    promise: true,
+    after: function(name, method, retValue) {
+      t.equal(name, 'object9', 'after() should pass object name as first arg');
+      t.equal(method, 'fooPromiseFail', 'after() should pass method name as second arg');
+      t.ok(retValue.then && retValue.catch, 'return value should be a Promise');
   }});
-  obj9.fooPromiseFail();
-});
+
+  obj9.fooPromiseFail().catch(function() { t.done(); });
+};
 
 // Helpers
 

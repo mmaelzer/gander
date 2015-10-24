@@ -12,6 +12,7 @@ Generally, though, gander exposes callbacks that are invoked before and after a 
 Gander supports CommonJS/node.js and AMD/require.js imports. You can also use it in your web app via a normal `script` tag and it will add itself to the `window` object.  
 
 [![build status](https://secure.travis-ci.org/mmaelzer/gander.png)](http://travis-ci.org/mmaelzer/gander)
+[![Coverage Status](https://coveralls.io/repos/mmaelzer/gander/badge.svg?branch=master&service=github)](https://coveralls.io/github/mmaelzer/gander?branch=master)
 
 Install
 -------
